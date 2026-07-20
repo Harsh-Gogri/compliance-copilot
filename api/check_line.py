@@ -126,6 +126,7 @@ CRITICAL RULES INSTRUCTIONS:
 - You must evaluate the line strictly based on the reference compliance contexts retrieved above, for the stated loan type.
 - Do not apply rules from any paragraph not shown in the reference contexts above.
 - If the retrieved contexts do not address a particular loan type distinction explicitly, apply the rule as generally stated.
+- If the candidate line mentions a specific time, always prioritize citing a reference paragraph that states an explicit numeric time threshold (e.g. "before 9:00 a.m." or "after 6:00 p.m.") over a paragraph that only generally mentions "hours of calling" without stating a specific cutoff, such as training or sensitivity requirements. Use the paragraph with the explicit threshold to determine compliance status.
 
 Instructions:
 1. Classify the candidate line as 'green' (fully compliant), 'amber' (suspect, borderline, or warning), or 'red' (violating a rule or highly non-compliant).
@@ -153,7 +154,7 @@ Instructions:
     return response.text
 
 def main():
-    test_line = "We will call you at 6:30pm to discuss the payment"
+    test_line = "We will call you again at 6:30pm if we don't hear back."
     
     # Run test 1: Microfinance
     print(f"Test 1: Checking line: '{test_line}' with loan_type='microfinance', version='v1'")
