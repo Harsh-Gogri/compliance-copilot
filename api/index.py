@@ -10,7 +10,7 @@ from diff_script import diff_script
 app = Flask(__name__)
 CORS(app)  # allows a browser-based frontend to call this later
 
-@app.route("/check-script", methods=["POST"])
+@app.route("/api/check-script", methods=["POST"])
 def check_script_endpoint():
     data = request.get_json(force=True)
 
@@ -27,7 +27,7 @@ def check_script_endpoint():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@app.route("/diff-script", methods=["POST"])
+@app.route("/api/diff-script", methods=["POST"])
 def diff_script_endpoint():
     data = request.get_json(force=True)
 
