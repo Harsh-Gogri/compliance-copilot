@@ -82,7 +82,7 @@ def retrieve_top_chunks(query, version, loan_type, index_path=VECTOR_INDEX_PATH,
         print(f"[Warning] No chunks found for version '{version}'. Defaulting to all chunks.")
         filtered_index = index
 
-# Filter out chunks scoped to a different loan type
+    # Filter out chunks scoped to a different loan type
     filtered_index = [
         chunk for chunk in filtered_index
         if LOAN_TYPE_SCOPE.get(chunk["para_id"]) in (None, loan_type)
@@ -97,8 +97,63 @@ def retrieve_top_chunks(query, version, loan_type, index_path=VECTOR_INDEX_PATH,
             "text": chunk["text"],
             "similarity": sim
         })
+
     scored.sort(key=lambda x: x["similarity"], reverse=True)
-    return scored[:top_n]
+
+    top_chunks = scored[:top_n]
+
+    # Guarantee the definitive threshold paragraph for this loan type is always
+    # included, even if it didn't rank in the top_n by similarity alone.
+    anchor_para_id = (
+        "91" if loan_type == "microfinance"
+        else "100" if loan_type == "general"
+        else None
+    )
+
+    if anchor_para_id and not any(c["para_id"] == anchor_para_id for c in top_chunks):
+        anchor_chunk = next(
+            (c for c in scored if c["para_id"] == anchor_para_id),
+            None
+        )
+        if anchor_chunk:
+            top_chunks.append(anchor_chunk)
+
+    return top_chunks
+
+# def retrieve_top_chunks(query, version, loan_type, index_path=VECTOR_INDEX_PATH, top_n=12):
+#     # Embed query
+#     result = client.models.embed_content(
+#         model="gemini-embedding-001",
+#         contents=query
+#     )
+#     query_emb = result.embeddings[0].values
+
+#     with open(index_path, "r", encoding="utf-8") as f:
+#         index = json.load(f)
+
+#     # Filter chunks by version
+#     filtered_index = [chunk for chunk in index if chunk.get("version") == version]
+#     if not filtered_index:
+#         print(f"[Warning] No chunks found for version '{version}'. Defaulting to all chunks.")
+#         filtered_index = index
+
+# # Filter out chunks scoped to a different loan type
+#     filtered_index = [
+#         chunk for chunk in filtered_index
+#         if LOAN_TYPE_SCOPE.get(chunk["para_id"]) in (None, loan_type)
+#     ]
+
+#     scored = []
+#     for chunk in filtered_index:
+#         sim = cosine_similarity(query_emb, chunk["embedding"])
+#         scored.append({
+#             "para_id": chunk["para_id"],
+#             "source": chunk["source"],
+#             "text": chunk["text"],
+#             "similarity": sim
+#         })
+#     scored.sort(key=lambda x: x["similarity"], reverse=True)
+#     return scored[:top_n]
 
 def check_line(line, loan_type, version):
     # Step 1: Retrieve context
