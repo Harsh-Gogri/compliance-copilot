@@ -1,3 +1,4 @@
+from sys import version
 import os
 import json
 import math
@@ -102,7 +103,7 @@ def retrieve_top_chunks(query, version, loan_type, index_path=VECTOR_INDEX_PATH,
 def check_line(line, loan_type, version):
     # Step 1: Retrieve context
     top_chunks = retrieve_top_chunks(line, version, loan_type)
-print(f"[{loan_type}/{version}] {line[:40]}... Retrieved: {[c['para_id'] for c in top_chunks]}")
+    print(f"[{loan_type}/{version}] {line[:40]}... Retrieved: {[c['para_id'] for c in top_chunks]}")
     
     # Format the retrieved context for the prompt
     context_str = ""
