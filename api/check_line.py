@@ -75,27 +75,18 @@ def retrieve_top_chunks(query, version, loan_type, index_path=VECTOR_INDEX_PATH,
 
     with open(index_path, "r", encoding="utf-8") as f:
         index = json.load(f)
-    print(f"[DEBUG] Loaded {len(index)} chunks from {index_path}")
-    print(f"[DEBUG] para_id=100 present in raw loaded index: {any(c['para_id'] == '100' for c in index)}")
 
     # Filter chunks by version
     filtered_index = [chunk for chunk in index if chunk.get("version") == version]
     if not filtered_index:
         print(f"[Warning] No chunks found for version '{version}'. Defaulting to all chunks.")
         filtered_index = index
-    
-    print(f"[DEBUG] After version filter: para_id=100 present: {any(c['para_id'] == '100' for c in filtered_index)}")
-    print(f"[DEBUG] repr(loan_type) = {repr(loan_type)}")
-    print(f"[DEBUG] LOAN_TYPE_SCOPE.get('100') = {repr(LOAN_TYPE_SCOPE.get('100'))}")
-    print(f"[DEBUG] Condition result: {LOAN_TYPE_SCOPE.get('100') in (None, loan_type)}")
 
     # Filter out chunks scoped to a different loan type
     filtered_index = [
         chunk for chunk in filtered_index
         if LOAN_TYPE_SCOPE.get(chunk["para_id"]) in (None, loan_type)
     ]
-
-    print(f"[DEBUG] After loan_type filter: para_id=100 present: {any(c['para_id'] == '100' for c in filtered_index)}")
 
     scored = []
     for chunk in filtered_index:
@@ -108,8 +99,6 @@ def retrieve_top_chunks(query, version, loan_type, index_path=VECTOR_INDEX_PATH,
         })
 
     scored.sort(key=lambda x: x["similarity"], reverse=True)
-
-    print(f"[DEBUG] In scored (all, unsliced): para_id=100 present: {any(c['para_id'] == '100' for c in scored)}")
 
     top_chunks = scored[:top_n]
 
