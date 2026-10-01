@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Compliance Copilot</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
@@ -35,6 +36,7 @@
             margin: 0;
             font-family: 'Manrope', sans-serif;
             color: var(--text-high);
+            -webkit-tap-highlight-color: transparent;
         }
 
         /* Sidebar */
@@ -50,6 +52,8 @@
             align-items: center;
             justify-content: space-between;
             padding: 32px 0;
+            z-index: 100;
+            transition: all 0.2s ease-in-out;
         }
 
         .sidebar .logo {
@@ -81,6 +85,7 @@
             width: 28px;
             height: 28px;
             overflow: hidden;
+            border-radius: 50%;
         }
 
         .sidebar .avatar img {
@@ -115,10 +120,11 @@
 
         .header-block,
         #inputView,
-        #loadingView {
+        #loadingView,
+        #outputView {
             width: 100%;
             max-width: 920px;
-            margin: auto;
+            margin: 0 auto;
         }
 
         .header-block {
@@ -167,6 +173,8 @@
             font-weight: 500;
             cursor: pointer;
             color: var(--text-high);
+            user-select: none;
+            transition: all 0.2s ease;
         }
 
         .loan-type-option:has(input:checked) {
@@ -191,11 +199,12 @@
             color: var(--text-high);
             padding: 0px 0 32px 0;
             resize: none;
-            min-height: 60px;
+            min-height: 120px;
             overflow-y: auto;
             flex: 1;
             font-weight: 500;
             line-height: 165%;
+            background: transparent;
         }
 
         #scriptInput::placeholder {
@@ -216,11 +225,12 @@
             color: white;
             border: none;
             border-radius: 12px;
-            padding: 8px 12px 8px 8px;
+            padding: 8px 16px 8px 8px;
             font-family: 'Manrope', sans-serif;
             font-size: 15px;
-            font-weight: 400;
+            font-weight: 500;
             cursor: pointer;
+            transition: opacity 0.2s ease;
         }
 
         .btn-main .icon-badge {
@@ -231,6 +241,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-shrink: 0;
         }
 
         .btn-main:disabled {
@@ -244,6 +255,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 40px 0;
         }
 
         .loading-content {
@@ -275,6 +287,8 @@
             background-color: white;
             position: sticky;
             top: 0px;
+            z-index: 90;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
         }
 
         .tabs {
@@ -294,6 +308,8 @@
             font-weight: 600;
             cursor: pointer;
             color: var(--text-high);
+            user-select: none;
+            transition: all 0.2s ease;
         }
 
         .tab.active {
@@ -310,11 +326,12 @@
             color: white;
             border: none;
             border-radius: 12px;
-            padding: 10px 10px 10px 12px;
+            padding: 10px 14px 10px 12px;
             font-family: 'Manrope', sans-serif;
             font-size: 15px;
             font-weight: 500;
             cursor: pointer;
+            transition: opacity 0.2s ease;
         }
 
         .new-script-btn .icon-badge {
@@ -325,6 +342,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-shrink: 0;
         }
 
         .row-card {
@@ -332,6 +350,7 @@
             border-radius: var(--radius);
             margin-bottom: 16px;
             overflow: hidden;
+            background: white;
         }
 
         .row-sentence {
@@ -339,6 +358,7 @@
             padding: 16px 20px;
             font-size: 16px;
             font-weight: 600;
+            word-break: break-word;
         }
 
         .row-panels {
@@ -366,6 +386,7 @@
             align-items: center;
             gap: 10px;
             margin-bottom: 10px;
+            flex-wrap: wrap;
         }
 
         .panel-label {
@@ -405,6 +426,7 @@
             color: var(--text-medium);
             line-height: 1.5;
             font-weight: 500;
+            word-break: break-word;
         }
 
         .panel-rewrite {
@@ -412,15 +434,72 @@
             font-style: italic;
             color: var(--text-medium);
             margin-top: 8px;
+            word-break: break-word;
         }
 
         .panel-citation {
             font-size: 12.5px;
             color: var(--text-low);
             margin-top: 8px;
+            word-break: break-word;
         }
 
-        @media (max-width: 700px) {
+        /* Responsive Media Queries */
+        @media (max-width: 768px) {
+            :root {
+                --sidebar-width: 0px;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: 56px;
+                bottom: auto;
+                flex-direction: row;
+                padding: 0 20px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+            }
+
+            .bottom-group {
+                flex-direction: row;
+                gap: 16px;
+            }
+
+            .main {
+                margin-left: 0;
+                margin-top: 56px;
+                padding: 24px 20px 80px 20px;
+            }
+
+            .loan-type-badge {
+                bottom: 16px;
+                right: 16px;
+                font-size: 12px;
+                padding: 6px 14px;
+            }
+
+            .toolbar {
+                top: 56px;
+                flex-wrap: wrap;
+                gap: 12px;
+                padding: 12px 0px;
+            }
+
+            .tabs {
+                flex: 1;
+                justify-content: flex-start;
+                gap: 8px;
+            }
+
+            .tab {
+                padding: 8px 14px;
+                font-size: 14px;
+            }
+
+            .new-script-btn {
+                padding: 8px 12px;
+                font-size: 14px;
+            }
+
             .row-panels.split {
                 grid-template-columns: 1fr;
             }
@@ -428,6 +507,76 @@
             .panel.left {
                 border-right: none;
                 border-bottom: 1px solid var(--border);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main {
+                padding: 16px 12px 70px 12px;
+            }
+
+            .loan-type-row {
+                width: 100%;
+                gap: 8px;
+            }
+
+            .loan-type-option {
+                justify-content: center;
+                padding: 8px 12px;
+                font-size: 13.5px;
+            }
+
+            #scriptInput {
+                font-size: 14px;
+            }
+
+            .submit-row {
+                padding-top: 16px;
+            }
+
+            .btn-main {
+                width: auto;
+                justify-content: center;
+                padding: 10px 16px;
+                font-size: 14px;
+            }
+
+            .toolbar {
+                flex-direction: column;
+                align-items: stretch;
+                top: 56px;
+            }
+
+            .tabs {
+                width: 100%;
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 6px;
+            }
+
+            .tab {
+                justify-content: center;
+                padding: 8px 6px;
+                font-size: 13px;
+                text-align: center;
+            }
+
+            .new-script-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .row-sentence {
+                padding: 12px 14px;
+                font-size: 15px;
+            }
+
+            .panel {
+                padding: 12px 14px;
+            }
+
+            .panel-explain {
+                font-size: 13.5px;
             }
         }
     </style>
